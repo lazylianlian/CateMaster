@@ -19,4 +19,7 @@
         <item name="android:gravity">center</item>
         <item name="android:padding">15dp</item>
     </style>
+    <style name = "cateListTextStyle">
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

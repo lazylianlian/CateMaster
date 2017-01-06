@@ -33,7 +33,9 @@
     <ListView
         android:id="@+id/cateList_lv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:scrollIndicators="none">
     </ListView>
 	
 </LinearLayout>
