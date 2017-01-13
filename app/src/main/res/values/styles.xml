@@ -22,4 +22,14 @@
     <style name = "cateListTextStyle">
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="myPopWindowAnim">
+        <item name="android:windowEnterAnimation">@anim/popwindow_show_anim</item>
+        <item name="android:windowExitAnimation">@anim/popwindow_hidden_anim</item>
+
+    </style>
+    <style name="mySesrchPopAnim">
+        <item name="android:windowEnterAnimation">@anim/search_pop_show_anim</item>
+        <item name="android:windowExitAnimation">@anim/search_pop_hidden_anim</item>
+
+    </style>
 </resources>

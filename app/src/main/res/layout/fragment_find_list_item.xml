@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:background="@color/white">
+
+    <TextView
+        android:text="美食研究主题"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/find_title"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="120dp"
+        app:srcCompat="@mipmap/grid_chuangyi"
+        android:id="@+id/find_img"
+        android:layout_alignTop="@+id/find_title"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="美食研究正文"
+        android:padding="5dp"
+        android:lines="5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/find_content"
+        android:layout_below="@+id/find_title"
+        android:layout_alignLeft="@+id/find_title"
+        android:layout_alignStart="@+id/find_title"
+        android:layout_alignBottom="@+id/find_img"
+        android:layout_toLeftOf="@+id/find_img"
+        android:layout_toStartOf="@+id/find_img" />
+
+    <TextView
+        android:text="未登录"
+        android:gravity="center_vertical|right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/find_img"
+        android:layout_toLeftOf="@+id/find_img"
+        android:id="@+id/find_userName"
+        android:layout_toRightOf="@+id/find_title"
+        android:layout_toEndOf="@+id/find_title"
+        android:layout_above="@+id/find_content" />
+</RelativeLayout>

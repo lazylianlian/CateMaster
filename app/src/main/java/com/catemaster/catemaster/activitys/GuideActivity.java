@@ -63,8 +63,7 @@ public class GuideActivity extends FragmentActivity implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(GuideActivity.this,
-						MainActivity.class);
+				Intent intent = new Intent(GuideActivity.this,LoginAndRegistActivity.class);
 				startActivity(intent);
 				finish();
 			}

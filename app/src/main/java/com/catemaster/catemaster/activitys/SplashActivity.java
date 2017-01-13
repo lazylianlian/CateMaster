@@ -11,16 +11,25 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
 import com.catemaster.catemaster.R;
+import com.catemaster.catemaster.bean.UserInfo;
+
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobUser;
+import cn.sharesdk.framework.ShareSDK;
 
 public class SplashActivity extends Activity {
 	Timer timer;
 	private SharedPreferences sp;
 	String string;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
+		Bmob.initialize(this,"844b411fb7129f92886dad13103fde9f");
+		ShareSDK.initSDK(this);
 		//�洢
 		sp = getSharedPreferences("user", Context.MODE_PRIVATE);
 		string = sp.getString("edit", "first");
@@ -35,7 +44,15 @@ public class SplashActivity extends Activity {
 					Intent intent = new Intent(SplashActivity.this,GuideActivity.class);
 					startActivity(intent);
 				}else {
-					Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+					UserInfo currentUser = BmobUser.getCurrentUser(UserInfo.class);
+					Intent intent;
+					if (currentUser==null){
+						intent = new Intent(SplashActivity.this,LoginAndRegistActivity.class);
+
+					}else {
+						intent = new Intent(SplashActivity.this, MainActivity.class);
+
+					}
 					startActivity(intent);
 				}
 				finish();

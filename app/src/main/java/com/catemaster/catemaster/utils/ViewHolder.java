@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -96,6 +97,19 @@ public class ViewHolder
     }
 
     /**
+     * 为Button设置图片
+     * @param viewId
+     * @param drawableId
+     * @return
+     */
+    public ViewHolder setBtnImageResource(int viewId, int drawableId)
+    {
+        Button view = getView(viewId);
+        view.setBackgroundResource(drawableId);
+
+        return this;
+    }
+    /**
      * 为ImageView设置图片
      *
      * @param viewId
@@ -140,6 +154,7 @@ public class ViewHolder
                 .cacheOnDisk(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
+
         ImageLoader.getInstance().loadImage(url,options,new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {

@@ -8,19 +8,19 @@
     android:layout_marginBottom="10dp">
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
         app:srcCompat="@mipmap/cate_default"
         android:id="@+id/step_img"
         android:layout_weight="1"
-        android:scaleType="centerCrop" />
+        android:scaleType="fitCenter" />
 
     <TextView
         android:text="step_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
+        android:id="@+id/step_text"
         android:layout_weight="1"
         android:padding="10dp"
-        />
+        android:background="@color/white"/>
 </LinearLayout>
