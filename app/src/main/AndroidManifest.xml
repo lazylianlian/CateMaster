@@ -25,7 +25,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activitys.MainActivity"></activity>
+        <activity android:name=".activitys.MainActivity" />
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -68,7 +68,9 @@
         <activity android:name=".activitys.CateListActivity" />
         <activity android:name=".activitys.CateDetailActivity" />
         <activity android:name=".activitys.LoginAndRegistActivity" />
-        <activity android:name=".activitys.FindAddActivity"></activity>
+        <activity android:name=".activitys.FindAddActivity" />
+        <activity android:name=".activitys.FindDetailActivity" />
+        <activity android:name=".activitys.PersonalSetActivity"></activity>
     </application>
 
 </manifest>

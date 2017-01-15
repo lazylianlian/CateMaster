@@ -6,36 +6,36 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.catemaster.catemaster.R;
 import com.catemaster.catemaster.activitys.FindAddActivity;
-import com.catemaster.catemaster.bean.FindCateInfo;
+import com.catemaster.catemaster.activitys.FindDetailActivity;
 import com.catemaster.catemaster.bean.Post;
 import com.catemaster.catemaster.utils.CommonAdapter;
 import com.catemaster.catemaster.utils.ViewHolder;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.QueryListener;
 
 public class FindFragment extends Fragment {
-	List<Post> postList;
+	List<Post> postList = new ArrayList<>();
 	CommonAdapter<Post> adapter;
 	ListView listView;
 	Button find_addBtn;
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+        Bmob.initialize(getActivity(),"844b411fb7129f92886dad13103fde9f");
 		View view = inflater.inflate(R.layout.fragment_find, null);
 		listView = (ListView) view.findViewById(R.id.findListView);
 		find_addBtn = (Button) view.findViewById(R.id.find_addBtn);
@@ -46,7 +46,17 @@ public class FindFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         initData();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Post post = postList.get(i);
+                Intent intent = new Intent(getActivity(),FindDetailActivity.class);
+                intent.putExtra("post",postList.get(i));
+                startActivity(intent);
+            }
+        });
 		return view;
 	}
 
@@ -57,18 +67,19 @@ public class FindFragment extends Fragment {
     }
 
     private void initData() {
-        postList = new ArrayList<>();
         BmobQuery<Post> query = new BmobQuery<>("Post");
         query.order("-updatedAt");
+        query.include("author.username");
 
         query.findObjects(new FindListener<Post>() {
             @Override
             public void done(List<Post> list, BmobException e) {
-                postList = list;
-                initAdapter();
-                adapter.notifyDataSetChanged();
-                Toast.makeText(getActivity(), "获取成功"+postList.size(), Toast.LENGTH_SHORT).show();
-
+                if(e==null){
+                    postList = list;
+                    initAdapter();
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getActivity(), "获取成功"+postList.size(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -79,9 +90,13 @@ public class FindFragment extends Fragment {
             @Override
             public void convert(ViewHolder helper, Post item) {
                 helper.setText(R.id.find_userName,item.getAuthor().getUsername());
-                helper.setText(R.id.find_title,item.getTitle());
-                helper.setText(R.id.find_content,item.getContent());
-                helper.setImageResource(R.id.find_img,R.mipmap.grid_hongbei);
+                helper.setText(R.id.fd_title,item.getTitle());
+                helper.setText(R.id.fd_content,item.getContent());
+                if (item.getImage()!=null){
+                    helper.setImageByUrl(R.id.fd_img,item.getImage().getFileUrl());
+                }else{
+                    helper.setImageResource(R.id.fd_img,R.mipmap.grid_hongbei);
+                }
             }
         };
         listView.setAdapter(adapter);

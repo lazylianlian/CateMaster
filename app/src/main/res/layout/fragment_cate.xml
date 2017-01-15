@@ -4,11 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white">
+
     <RelativeLayout
         android:id="@+id/titleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView 
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -18,8 +19,9 @@
             android:id="@+id/searchBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/btn_cate_search"
+            android:background="@mipmap/cate_search"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
             android:layout_centerVertical="true"/>
     </RelativeLayout>
 
@@ -31,5 +33,5 @@
         android:scrollIndicators="none"
         >
     </GridView>
-	
+
 </LinearLayout>

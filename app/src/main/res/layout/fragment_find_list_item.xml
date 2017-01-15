@@ -10,7 +10,7 @@
         android:text="美食研究主题"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/find_title"
+        android:id="@+id/fd_title"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -20,8 +20,8 @@
         android:layout_width="100dp"
         android:layout_height="120dp"
         app:srcCompat="@mipmap/grid_chuangyi"
-        android:id="@+id/find_img"
-        android:layout_alignTop="@+id/find_title"
+        android:id="@+id/fd_img"
+        android:layout_alignTop="@+id/fd_title"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -31,13 +31,13 @@
         android:lines="5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/find_content"
-        android:layout_below="@+id/find_title"
-        android:layout_alignLeft="@+id/find_title"
-        android:layout_alignStart="@+id/find_title"
-        android:layout_alignBottom="@+id/find_img"
-        android:layout_toLeftOf="@+id/find_img"
-        android:layout_toStartOf="@+id/find_img" />
+        android:id="@+id/fd_content"
+        android:layout_below="@+id/fd_title"
+        android:layout_alignLeft="@+id/fd_title"
+        android:layout_alignStart="@+id/fd_title"
+        android:layout_alignBottom="@+id/fd_img"
+        android:layout_toLeftOf="@+id/fd_img"
+        android:layout_toStartOf="@+id/fd_img" />
 
     <TextView
         android:text="未登录"
@@ -45,10 +45,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/find_img"
-        android:layout_toLeftOf="@+id/find_img"
+        android:layout_toStartOf="@+id/fd_img"
+        android:layout_toLeftOf="@+id/fd_img"
         android:id="@+id/find_userName"
-        android:layout_toRightOf="@+id/find_title"
-        android:layout_toEndOf="@+id/find_title"
-        android:layout_above="@+id/find_content" />
+        android:layout_toRightOf="@+id/fd_title"
+        android:layout_toEndOf="@+id/fd_title"
+        android:layout_above="@+id/fd_content" />
 </RelativeLayout>

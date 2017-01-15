@@ -1,5 +1,7 @@
 package com.catemaster.catemaster.bean;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
@@ -8,7 +10,7 @@ import cn.bmob.v3.datatype.BmobRelation;
  * Created by 文捷 on 2017/1/12.
  */
 
-public class Post extends BmobObject{
+public class Post extends BmobObject implements Serializable{
     private String title;//帖子标题
 
     private String content;// 帖子内容

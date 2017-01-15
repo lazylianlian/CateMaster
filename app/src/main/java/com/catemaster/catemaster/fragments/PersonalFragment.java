@@ -8,14 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.catemaster.catemaster.R;
 import com.catemaster.catemaster.activitys.CateDetailActivity;
 import com.catemaster.catemaster.activitys.CateListActivity;
+import com.catemaster.catemaster.activitys.PersonalSetActivity;
 import com.catemaster.catemaster.bean.CateCollectionInfo;
 import com.catemaster.catemaster.bean.CateInfo;
+import com.catemaster.catemaster.bean.UserInfo;
 import com.catemaster.catemaster.dao.DBManager;
 import com.catemaster.catemaster.utils.CommonAdapter;
 import com.catemaster.catemaster.utils.ViewHolder;
@@ -29,13 +33,25 @@ public class PersonalFragment extends Fragment {
 	CommonAdapter<CateCollectionInfo> adapter;
 	DBManager manager;
 	Button collectBtn;
+	ImageView settingBtn;
+	TextView person_name,person_word;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.fragment_personal, null);
 		listView = (ListView) view.findViewById(R.id.personListView);
+		UserInfo userInfo = UserInfo.getCurrentUser();
+
 		manager = DBManager.getInstance(getActivity());
+		settingBtn = (ImageView) view.findViewById(R.id.personal_setting);
+		settingBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(getActivity(),PersonalSetActivity.class);
+				startActivity(intent);
+			}
+		});
 		initData();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -65,6 +81,7 @@ public class PersonalFragment extends Fragment {
 		});
 		return view;
 	}
+
 
 	private void initData() {
 		list = manager.findCateCollecInfo();

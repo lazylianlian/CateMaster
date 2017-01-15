@@ -1,10 +1,13 @@
 package com.catemaster.catemaster.bean;
 
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobObject;
+
 /**
  * Created by 文捷 on 2017/1/12.
  */
 
-public class Comment {
+public class Comment extends BmobObject {
     private String content;//评论内容
 
     private UserInfo user;//评论的用户，Pointer类型，一对一关系

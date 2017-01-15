@@ -25,11 +25,12 @@
         <Button 
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/btn_cate_search"
+            android:background="@mipmap/cate_search"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"/>
     </RelativeLayout>
+
     <ListView
         android:id="@+id/cateList_lv"
         android:layout_width="match_parent"
