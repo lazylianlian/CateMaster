@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="15dp">
+    android:padding="15dp"
+    android:background="@color/white">
 
 
     <TextView
@@ -22,5 +23,5 @@
         android:layout_gravity="right"
         android:id="@+id/com_author"
         android:textSize="18sp"
-        android:textColor="#99000000"/>
+        android:textColor="@color/lightcoral"/>
 </LinearLayout>

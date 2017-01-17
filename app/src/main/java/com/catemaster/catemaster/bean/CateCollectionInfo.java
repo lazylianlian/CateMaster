@@ -2,25 +2,26 @@ package com.catemaster.catemaster.bean;
 
 import java.util.List;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * Created by 文捷 on 2017/1/9.
  */
 
-public class CateCollectionInfo {
+public class CateCollectionInfo extends BmobObject{
     private String id;
     private String title;
     private String albums;
-    private int checked;
+    private UserInfo userInfo;
 
     public CateCollectionInfo() {
         super();
     }
 
-    public CateCollectionInfo(String id, String title, String albums, int checked) {
+    public CateCollectionInfo(String id, String title, String albums) {
         this.id = id;
         this.title = title;
         this.albums = albums;
-        this.checked = checked;
     }
 
     public String getId() {
@@ -46,12 +47,11 @@ public class CateCollectionInfo {
     public void setAlbums(String albums) {
         this.albums = albums;
     }
-
-    public int getChecked() {
-        return checked;
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 
-    public void setChecked(int checked) {
-        this.checked = checked;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 }

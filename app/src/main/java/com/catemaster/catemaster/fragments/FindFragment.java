@@ -70,7 +70,19 @@ public class FindFragment extends Fragment {
         BmobQuery<Post> query = new BmobQuery<>("Post");
         query.order("-updatedAt");
         query.include("author.username");
+        /*
+        缓存策略
+        Bmob SDK提供了几种不同的缓存策略，以适应不同应用场景的需求：
 
+            IGNORE_CACHE :只从网络获取数据，且不会将数据缓存在本地，这是默认的缓存策略。
+            CACHE_ONLY :只从缓存读取数据，如果缓存没有数据会导致一个BmobException,可以忽略不处理这个BmobException.
+            NETWORK_ONLY :只从网络获取数据，同时会在本地缓存数据。
+            NETWORK_ELSE_CACHE:先从网络读取数据，如果没有，再从缓存中获取。
+            CACHE_ELSE_NETWORK:先从缓存读取数据，如果没有，再从网络获取。
+            CACHE_THEN_NETWORK:先从缓存取数据，无论结果如何都会再次从网络获取数据。也就是说会产生2次调用。
+         */
+        //先从网络读取数据，没有再获取缓存数据
+        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.findObjects(new FindListener<Post>() {
             @Override
             public void done(List<Post> list, BmobException e) {

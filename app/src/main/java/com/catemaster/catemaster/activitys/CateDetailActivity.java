@@ -1,8 +1,6 @@
 package com.catemaster.catemaster.activitys;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,17 +16,34 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.catemaster.catemaster.R;
 import com.catemaster.catemaster.bean.CateCollectionInfo;
 import com.catemaster.catemaster.bean.CateInfo;
+import com.catemaster.catemaster.bean.UserInfo;
+import com.catemaster.catemaster.constants.ConstantUtils;
 import com.catemaster.catemaster.dao.DBManager;
 import com.catemaster.catemaster.utils.CommonAdapter;
 import com.catemaster.catemaster.utils.ViewHolder;
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.sharesdk.facebook.Facebook;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
@@ -57,7 +72,7 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
     CateInfo.ResultBean.CateDetailInfo detailInfo;//美食详情实体类
     ImageLoader imgLoader;
     DisplayImageOptions options;
-
+    RequestQueue queue;
     ListView listView;
     CommonAdapter<CateInfo.ResultBean.CateDetailInfo.CateStepsInfo> adapter;
 
@@ -66,15 +81,58 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cate_detail);
         ShareSDK.initSDK(this);
-        Intent intent = getIntent();
-        detailInfo = (CateInfo.ResultBean.CateDetailInfo) intent.getBundleExtra("bundle").getSerializable("cateDetailInfo");
+        queue = Volley.newRequestQueue(this);
         imgLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.mipmap.cate_default)
                 .showImageOnFail(R.mipmap.cate_default)
                 .build();
-        initView();
+        Intent intent = getIntent();
+        if (intent.getBundleExtra("bundle")!=null){
+            detailInfo = (CateInfo.ResultBean.CateDetailInfo) intent.getBundleExtra("bundle").getSerializable("cateDetailInfo");
+            initView();
+
+        }else{
+            String id = intent.getStringExtra("id");
+            getCateInfoByID(id);
+        }
+
     }
+
+    private void getCateInfoByID(final String id) {
+        StringRequest request = new StringRequest(Request.Method.POST,
+                ConstantUtils.JUHE_ID_SEARCH_URL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String s) {
+                Gson gson = new Gson();
+                Log.i("-----",s);
+                CateInfo cateInfo = gson.fromJson(s, CateInfo.class);
+                detailInfo = cateInfo.getResult().getData().get(0);
+                initView();
+                Toast.makeText(CateDetailActivity.this, "", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                String err = volleyError.getCause().toString();
+                Toast.makeText(CateDetailActivity.this, err, Toast.LENGTH_SHORT).show();
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> maps = new HashMap<String,String>();
+                maps.put("key",ConstantUtils.JUHE_CATE_KEY);
+                maps.put("id",id+"");
+
+                return maps;
+            }
+        };
+        queue.add(request);
+        queue.start();
+    }
+
     /*
      *   V初始化
      */
@@ -102,11 +160,7 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
         }
 
         manager = DBManager.getInstance(CateDetailActivity.this);
-        if (manager.isCollected(detailInfo.getId())) {
-            collectBtn.setBackgroundResource(R.mipmap.cate_list_like_normal);
-        } else {
-            collectBtn.setBackgroundResource(R.mipmap.cate_list_like_click);
-        }
+        collectExitMethod(detailInfo.getId());
         view = getLayoutInflater().inflate(R.layout.activity_cate_detail_popwindow, null);
         popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         initPopView();
@@ -164,16 +218,31 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View view) {
 
                 CateInfo.ResultBean.CateDetailInfo cInfo = detailInfo;
-                CateCollectionInfo cateCollectionInfo = new CateCollectionInfo(cInfo.getId(), cInfo.getTitle(), cInfo.getAlbums().get(0), 1);
-                boolean result = manager.addCateCollecInfo(cateCollectionInfo);
-                if (result) {
-                    collectBtn.setBackgroundResource(R.mipmap.cate_list_like_click);
-                } else {
-                    collectBtn.setBackgroundResource(R.mipmap.cate_list_like_normal);
-                }
+                CateCollectionInfo cateCollectionInfo = new CateCollectionInfo(cInfo.getId(), cInfo.getTitle(), cInfo.getAlbums().get(0));
+                DoCollectInfo(cateCollectionInfo);
             }
         });
     }
+
+    private void DoCollectInfo(final CateCollectionInfo cateCollectionInfo) {
+        BmobQuery<CateCollectionInfo> query = new BmobQuery<>("CateCollectionInfo");
+        query.addWhereEqualTo("userInfo", UserInfo.getCurrentUser());
+        query.addWhereEqualTo("id",cateCollectionInfo.getId());
+        query.findObjects(new FindListener<CateCollectionInfo>() {
+            @Override
+            public void done(List<CateCollectionInfo> list, BmobException e) {
+                if (list.size()==0){
+                    //收藏
+                    addInfo(cateCollectionInfo);
+                }else{
+                    //取消收藏
+                    deleteCollectInfo(cateCollectionInfo);
+                }
+
+            }
+        });
+    }
+
     /*
      *   popWindow显示隐藏
      */
@@ -241,8 +310,61 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
         finish();
     }
     /*
-     *   点击事件
+     *   初始化遍历收藏美食
      */
+    private void collectExitMethod(String id) {
+        BmobQuery<CateCollectionInfo> query = new BmobQuery<>("CateCollectionInfo");
+        query.addWhereEqualTo("userInfo", UserInfo.getCurrentUser());
+        query.addWhereEqualTo("id",id);
+        query.findObjects(new FindListener<CateCollectionInfo>() {
+            @Override
+            public void done(List<CateCollectionInfo> list, BmobException e) {
+                if (list.size()==0){
+                    collectBtn.setBackgroundResource(R.mipmap.cate_list_like_normal);
+                }else{
+                    collectBtn.setBackgroundResource(R.mipmap.cate_list_like_click);
+                }
+
+            }
+        });
+    }
+
+    /**
+     * 添加收藏
+     * @param cInfo
+     */
+    private void addInfo(CateCollectionInfo cInfo) {
+        CateCollectionInfo info = new CateCollectionInfo();
+        info.setTitle(cInfo.getTitle());
+        info.setAlbums(cInfo.getAlbums());
+        info.setId(cInfo.getId());
+        info.setUserInfo(UserInfo.getCurrentUser());
+        info.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e==null){
+                    Toast.makeText(CateDetailActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                    collectBtn.setBackgroundResource(R.mipmap.cate_list_like_click);
+                }
+            }
+        });
+    }
+    /**
+     * 取消收藏
+     * @param cateCollectionInfo 所选的美食
+     */
+    private void deleteCollectInfo(CateCollectionInfo cateCollectionInfo) {
+
+        cateCollectionInfo.delete(cateCollectionInfo.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e==null){
+                    Toast.makeText(CateDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
+                    collectBtn.setBackgroundResource(R.mipmap.cate_list_like_normal);
+                }
+            }
+        });
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

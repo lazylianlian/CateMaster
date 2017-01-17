@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -42,6 +43,7 @@ public class LoginAndRegistActivity extends AppCompatActivity implements View.On
             regist_pass, regist_secondPass;
     RequestQueue queue;
     SharedPreferences sp;
+    TextView toast_pass1,toast_pass2,toast_email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +91,9 @@ public class LoginAndRegistActivity extends AppCompatActivity implements View.On
         loginLayout = (LinearLayout) findViewById(R.id.loginLayout);
         registLayout = (LinearLayout) findViewById(R.id.registLayout);
         registLayout.setVisibility(View.GONE);
-
+        toast_email = (TextView) findViewById(R.id.toast_email);
+        toast_pass1 = (TextView) findViewById(R.id.Toast_pass1);
+        toast_pass2 = (TextView) findViewById(R.id.Toast_pass2);
         login_login = (Button) findViewById(R.id.login_login);
         login_regist = (Button) findViewById(R.id.login_regist);
         regist_login = (Button) findViewById(R.id.regist_login);
@@ -111,14 +115,14 @@ public class LoginAndRegistActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_login:
-                String userName = login_userName.getText().toString().trim();
+                String email = login_userName.getText().toString().trim();
                 String pass = login_pass.getText().toString().trim();
-                Log.i("~~~~email~~~~", userName);
+                Log.i("~~~~email~~~~", email);
                 Log.i("~~~~pass~~~~", pass);
 
-                if (!(userName==null&&"".equals(userName))&&!(pass==null&&"".equals(pass))) {
+                if (!(email==null&&"".equals(email))&&!(pass==null&&"".equals(pass))) {
                     //执行登录操作
-                    DoLoginData(userName, pass);
+                    DoLoginData(email, pass);
                 }
                 break;
             case R.id.login_regist://切换为注册页面
@@ -133,8 +137,10 @@ public class LoginAndRegistActivity extends AppCompatActivity implements View.On
                 String rPass = regist_pass.getText().toString().trim();
                 String secondPass = regist_secondPass.getText().toString().trim();
                 if (!rPass.equals(secondPass)) {
-                    Toast.makeText(this, "两次输入密码不一致", Toast.LENGTH_SHORT).show();
+                    toast_pass2.setVisibility(View.VISIBLE);
                 }else {
+                    toast_pass2.setVisibility(View.GONE);
+
                     //执行注册操作
                     String remail = regist_email.getText().toString().trim();
                     String rUserName = regist_userName.getText().toString().trim();
@@ -149,15 +155,19 @@ public class LoginAndRegistActivity extends AppCompatActivity implements View.On
     /*
      *  用户登录
      */
-    public void DoLoginData(String userName,String pass) {
-        UserInfo.loginByAccount(userName, pass, new LogInListener<UserInfo>() {
+    public void DoLoginData(String email,String pass) {
+        UserInfo.loginByAccount(email, pass, new LogInListener<UserInfo>() {
             @Override
             public void done(UserInfo userInfo, BmobException e) {
                 if (e==null){
+                    toast_pass1.setVisibility(View.GONE);
+
                     UserInfo currentUser = BmobUser.getCurrentUser(UserInfo.class);
                     Toast.makeText(LoginAndRegistActivity.this, currentUser.getObjectId()+currentUser.getUsername(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginAndRegistActivity.this,MainActivity.class);
                     startActivity(intent);
+                }else{
+                    toast_pass1.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -174,9 +184,11 @@ public class LoginAndRegistActivity extends AppCompatActivity implements View.On
             @Override
             public void done(UserInfo userInfo, BmobException e) {
                 if (e==null){
-                    Toast.makeText(LoginAndRegistActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                    toast_email.setVisibility(View.VISIBLE);
+                    toast_email.setText("注册成功，请直接登录");
                 }else{
-                    Toast.makeText(LoginAndRegistActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+                    toast_email.setVisibility(View.VISIBLE);
+                    toast_email.setText(e.getMessage());
                 }
             }
         });

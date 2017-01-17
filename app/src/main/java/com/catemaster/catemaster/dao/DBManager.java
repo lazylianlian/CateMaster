@@ -46,7 +46,6 @@ public class DBManager {
         values.put("id",cInfo.getId());
         values.put("title",cInfo.getTitle());
         values.put("albums",cInfo.getAlbums());
-        values.put("checked",cInfo.getChecked());
         writeDB.insert(DBHelper.TABLENAME,null,values);
         return true;
     }
@@ -69,7 +68,7 @@ public class DBManager {
             String title = cursor.getString(cursor.getColumnIndex("title"));
             String albums = cursor.getString(cursor.getColumnIndex("albums"));
             int checked = cursor.getInt(cursor.getColumnIndex("checked"));
-            CateCollectionInfo collectionInfo = new CateCollectionInfo(id,title,albums,checked);
+            CateCollectionInfo collectionInfo = new CateCollectionInfo(id,title,albums);
             list.add(collectionInfo);
         }
         return list;

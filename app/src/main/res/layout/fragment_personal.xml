@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 	android:background="@color/white">
-    <RelativeLayout 
+
+	<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -24,47 +25,59 @@
 			android:layout_centerVertical="true"
 			android:layout_alignParentRight="true"
 			android:layout_alignParentEnd="true" />
+
 	</RelativeLayout>
 
-    <RelativeLayout
+	<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="249dp"
         android:padding="10dp"
-        android:background="#66ff66">
+        android:background="#ffffff">
 
 
-		<TextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-			android:text="sahjksa"
-			android:layout_below="@+id/personal_img"
-			android:layout_centerHorizontal="true"
-			android:id="@+id/person_name"
-			android:textSize="15sp"
-			android:textColor="@color/black"/>
+            android:text="sahjksa"
+            android:layout_below="@+id/personal_img"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/person_name"
+            android:textSize="15sp"
+            android:textColor="@color/black"/>
 
-		<ImageView
-		    android:id="@+id/personal_img"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-			android:src="@drawable/a4"
-			android:layout_alignParentTop="true"
-			android:layout_centerHorizontal="true"
-			android:layout_marginTop="28dp" />
+        <com.catemaster.catemaster.widgets.RoundImageView
+            android:id="@+id/personal_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/person_default_img"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="28dp" />
 
-		<TextView
-			android:text="TextView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/person_word"
-			android:layout_below="@+id/person_name"
-			android:layout_centerHorizontal="true"
-			android:textSize="15sp"
-			android:gravity="center"
-			android:textColor="@color/black"/>
-	</RelativeLayout>
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/person_word"
+            android:layout_below="@+id/person_name"
+            android:layout_centerHorizontal="true"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:textColor="@color/black"/>
 
-    <ListView
+    </RelativeLayout>
+
+	<TextView
+		android:padding="10dp"
+        android:text="快去收藏让你心动的美食吧！"
+		android:textColor="@color/lightcoral"
+		android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/toast_collec" />
+
+	<ListView
         android:id="@+id/personListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
