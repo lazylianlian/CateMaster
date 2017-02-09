@@ -1,59 +1,97 @@
 package com.catemaster.catemaster.fragments;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.catemaster.catemaster.R;
 import com.catemaster.catemaster.activitys.CateDetailActivity;
 import com.catemaster.catemaster.activitys.CateListActivity;
+import com.catemaster.catemaster.activitys.FindAddActivity;
 import com.catemaster.catemaster.activitys.PersonalSetActivity;
 import com.catemaster.catemaster.bean.CateCollectionInfo;
 import com.catemaster.catemaster.bean.UserInfo;
 import com.catemaster.catemaster.dao.DBManager;
 import com.catemaster.catemaster.utils.CommonAdapter;
+import com.catemaster.catemaster.utils.ImagePathUtils;
 import com.catemaster.catemaster.utils.ViewHolder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
+
+import static android.app.Activity.RESULT_OK;
 
 public class PersonalFragment extends Fragment {
 	ListView listView;
 	List<CateCollectionInfo> cList = new ArrayList<>();
 	CommonAdapter<CateCollectionInfo> adapter;
-	DBManager manager;
 	Button collectBtn;
-	ImageView settingBtn;
+	ImageView settingBtn,personal_img;
 	TextView person_name,person_word,toast_collec;
-	@Override
+    TextView photoChoose,cancle;//popWindow中控件
+    PopupWindow popupWindow;
+    View popView;
+    ImageLoader imgLoader;
+    DisplayImageOptions options;
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
         Bmob.initialize(getActivity(),"844b411fb7129f92886dad13103fde9f");
-
+        imgLoader = ImageLoader.getInstance();
+        options = new DisplayImageOptions.Builder()
+                .build();
         View view = inflater.inflate(R.layout.fragment_personal, null);
-		listView = (ListView) view.findViewById(R.id.personListView);
+        popView = inflater.inflate(R.layout.fragment_personal_pop, null);
+        popupWindow = new PopupWindow(popView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        initPopWindow();
+
+        listView = (ListView) view.findViewById(R.id.personListView);
 		person_name = (TextView) view.findViewById(R.id.person_name);
 		person_word = (TextView) view.findViewById(R.id.person_word);
         toast_collec = (TextView) view.findViewById(R.id.toast_collec);
+        personal_img = (ImageView) view.findViewById(R.id.personal_img) ;
+        personal_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopWindow();
+            }
+        });
         initUserInfo();
-		manager = DBManager.getInstance(getActivity());
-		settingBtn = (ImageView) view.findViewById(R.id.personal_setting);
+        settingBtn = (ImageView) view.findViewById(R.id.personal_setting);
 		settingBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -61,7 +99,7 @@ public class PersonalFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
-		initData();
+        initData();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
@@ -76,7 +114,6 @@ public class PersonalFragment extends Fragment {
 //							initData();
 //							Toast.makeText(getActivity(), "取消收藏", Toast.LENGTH_SHORT).show();
 //						}
-						Toast.makeText(getActivity(), cList.get(i).getId(), Toast.LENGTH_SHORT).show();
 					}
 				});
 
@@ -91,6 +128,94 @@ public class PersonalFragment extends Fragment {
 		});
 		return view;
 	}
+
+    private void initPopWindow() {
+        photoChoose = (TextView) popView.findViewById(R.id.photoChoose);
+        cancle = (TextView) popView.findViewById(R.id.cancle);
+        photoChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //进入系统相册更换用户图片
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                intent.putExtra("crop", true);
+                intent.putExtra("return-data", true);
+                startActivityForResult(intent, 2);
+            }
+        });
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+                backgroundAlpha(1);
+            }
+        });
+    }
+
+
+    /**
+     * 获取手机相册图片
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2 && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            ContentResolver cr = getActivity().getContentResolver();
+            try {
+                Bitmap bmp = BitmapFactory
+                        .decodeStream(cr.openInputStream(uri));
+                personal_img.setImageBitmap(bmp);
+                popupWindow.dismiss();
+                backgroundAlpha(1);
+                String path = ImagePathUtils.getRealPathFromUri(getActivity(),uri);
+                doPostImageFile(path);
+
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+    private void doPostImageFile(String path) {
+        final BmobFile imageFile = new BmobFile(new File(path));
+        imageFile.uploadblock(new UploadFileListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e==null){
+                    //String url = imageFile.getFileUrl();
+                    //上传图片成功，更换用户头像
+                    popupWindow.dismiss();
+                    backgroundAlpha(1);
+                    doSetUserImg(imageFile);
+
+                }
+            }
+
+        });
+    }
+    private void doSetUserImg(BmobFile imageFile) {
+        UserInfo newUser = new UserInfo();
+        UserInfo bmobUser = UserInfo.getCurrentUser();
+        newUser.setUserHeadImg(imageFile);
+        newUser.setUserWord(bmobUser.getUserWord());
+        newUser.update(bmobUser.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        initData();
+    }
 
     /**
      * 取消收藏
@@ -121,8 +246,35 @@ public class PersonalFragment extends Fragment {
     private void initUserInfo() {
         UserInfo userInfo = UserInfo.getCurrentUser();
         person_name.setText(userInfo.getUsername());
+        if (userInfo.getUserHeadImg()==null||userInfo.getUserHeadImg().getFileUrl().length()==0){
+            personal_img.setBackgroundResource(R.mipmap.person_default_img);
+        }else{
+            imgLoader.loadImage(userInfo.getUserHeadImg().getFileUrl(), new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String s, View view) {
+
+                }
+
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+                }
+
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    personal_img.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onLoadingCancelled(String s, View view) {
+
+                }
+            });
+        }
+
         if (userInfo.getUserWord()==null||userInfo.getUserWord().equals("")){
             person_word.setText("我的美食宣言");
+
         }else{
             person_word.setText(userInfo.getUserWord());
         }
@@ -166,4 +318,40 @@ public class PersonalFragment extends Fragment {
         listView.setAdapter(adapter);
     }
 
+    /*
+     *   popWindow显示隐藏
+     */
+    private void showPopWindow() {
+        //第三方分享
+        if (!popupWindow.isShowing()) {
+            //在底部显示
+            popupWindow.showAtLocation(popView, Gravity.BOTTOM, 0, 0);
+            popupWindow.setAnimationStyle(R.style.myPopWindowAnim);
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setTouchable(true);
+            popupWindow.setFocusable(true);
+            backgroundAlpha(0.8f);
+            popView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (popupWindow.isShowing()) {
+                        backgroundAlpha(1);
+                        popupWindow.dismiss();
+                    }
+                    return false;
+                }
+            });
+        } else {
+            backgroundAlpha(1);
+            popupWindow.dismiss();
+        }
+    }
+    /*
+     *   设置窗体背景颜色变化
+     */
+    public void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
+        layoutParams.alpha = bgAlpha;
+        getActivity().getWindow().setAttributes(layoutParams);
+    }
 }

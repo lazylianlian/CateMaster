@@ -24,6 +24,7 @@ public class PersonalSetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_personal_set);
         initView();
     }
@@ -53,6 +54,7 @@ public class PersonalSetActivity extends AppCompatActivity {
                 BmobUser.logOut();   //清除缓存用户对象
                 Intent intent = new Intent(PersonalSetActivity.this,LoginAndRegistActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -66,6 +68,7 @@ public class PersonalSetActivity extends AppCompatActivity {
         UserInfo newUser = new UserInfo();
 
         UserInfo bmobUser = UserInfo.getCurrentUser();
+
         if (bmobUser.getUsername().equals(username)&&bmobUser.getUserWord().equals(word)){
             Toast.makeText(PersonalSetActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
             return;

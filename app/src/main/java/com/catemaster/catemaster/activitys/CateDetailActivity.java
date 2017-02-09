@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -68,7 +69,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
     Button collectBtn, shareBtn;
     View view;//popWindow的布局V
     PopupWindow popupWindow;
-    DBManager manager;//收藏美食数据库操作类对象
     CateInfo.ResultBean.CateDetailInfo detailInfo;//美食详情实体类
     ImageLoader imgLoader;
     DisplayImageOptions options;
@@ -80,6 +80,8 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cate_detail);
+        Bmob.initialize(this,"844b411fb7129f92886dad13103fde9f");
+
         ShareSDK.initSDK(this);
         queue = Volley.newRequestQueue(this);
         imgLoader = ImageLoader.getInstance();
@@ -159,7 +161,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
             imgLoader.displayImage(imgUrl, img, options);
         }
 
-        manager = DBManager.getInstance(CateDetailActivity.this);
         collectExitMethod(detailInfo.getId());
         view = getLayoutInflater().inflate(R.layout.activity_cate_detail_popwindow, null);
         popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
@@ -300,7 +301,7 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
         }
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + 300 + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        params.height = totalHeight + 400 + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         // listView.getDividerHeight()获取子项间分隔符占用的高度
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
@@ -343,7 +344,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void done(String s, BmobException e) {
                 if (e==null){
-                    Toast.makeText(CateDetailActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
                     collectBtn.setBackgroundResource(R.mipmap.cate_list_like_click);
                 }
             }
@@ -359,7 +359,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void done(BmobException e) {
                 if (e==null){
-                    Toast.makeText(CateDetailActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
                     collectBtn.setBackgroundResource(R.mipmap.cate_list_like_normal);
                 }
             }
@@ -369,7 +368,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.qq://qq
-                Toast.makeText(this, "dianji", Toast.LENGTH_SHORT).show();
                 Platform qq = ShareSDK.getPlatform(this, QQ.NAME);
                 QQ.ShareParams qqq = new QQ.ShareParams();
                 qqq.setText("美食研究生——"+detailInfo.getTitle());
@@ -402,7 +400,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
                 qzone.setPlatformActionListener(new PlatformActionListener() {
                     @Override
                     public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-                        Toast.makeText(CateDetailActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
                         backgroundAlpha(1);
                         popupWindow.dismiss();
                     }
@@ -415,7 +412,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
 
                     @Override
                     public void onCancel(Platform platform, int i) {
-                        Toast.makeText(CateDetailActivity.this, "分享取消", Toast.LENGTH_SHORT).show();
                         backgroundAlpha(1);
                         popupWindow.dismiss();
                     }
@@ -423,7 +419,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
                 qzone.share(qzsp);
                 break;
             case R.id.tecentweibo://腾讯微博
-                Toast.makeText(this, "...", Toast.LENGTH_SHORT).show();
                 Platform tecentweibo = ShareSDK.getPlatform(this, TencentWeibo.NAME);
                 TencentWeibo.ShareParams tecentweibosp = new TencentWeibo.ShareParams();
                 tecentweibosp.setText("美食研究生——"+detailInfo.getTitle());
@@ -449,7 +444,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
                 tecentweibo.share(tecentweibosp);
                 break;
             case R.id.sinaweibo://新浪微博
-                Toast.makeText(this, "...", Toast.LENGTH_SHORT).show();
                 Platform weibo = ShareSDK.getPlatform(this, SinaWeibo.NAME);
                 SinaWeibo.ShareParams sp = new SinaWeibo.ShareParams();
                 sp.setText("美食研究生——"+detailInfo.getTitle());
@@ -555,7 +549,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
                 wecomchat.share(wecomsp);
                 break;
             case R.id.twitter://twitter
-                Toast.makeText(this, "...", Toast.LENGTH_SHORT).show();
                 Platform twitter = ShareSDK.getPlatform(this, Twitter.NAME);
                 Twitter.ShareParams twittersp = new Twitter.ShareParams();
                 twittersp.setText("美食研究生——"+detailInfo.getTitle());
@@ -582,7 +575,6 @@ public class CateDetailActivity extends AppCompatActivity implements View.OnClic
 
                 break;
             case R.id.facebook://facebook
-                Toast.makeText(this, "...", Toast.LENGTH_SHORT).show();
                 Platform facebook = ShareSDK.getPlatform(this, Facebook.NAME);
                 Facebook.ShareParams facebooksp = new Facebook.ShareParams();
                 facebooksp.setText("美食研究生——"+detailInfo.getTitle());

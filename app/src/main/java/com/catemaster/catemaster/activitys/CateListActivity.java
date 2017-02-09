@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -53,7 +54,6 @@ public class CateListActivity extends Activity {
     List<CateInfo.ResultBean.CateDetailInfo> cateDetailInfos = new ArrayList<>();
     CommonAdapter<CateInfo.ResultBean.CateDetailInfo> adapter;
     RequestQueue queue;
-    DBManager manager;
     Button collectBtn;
     ImageLoader imageLoader;
     DisplayImageOptions options;
@@ -62,6 +62,8 @@ public class CateListActivity extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catelist);
+        Bmob.initialize(this,"844b411fb7129f92886dad13103fde9f");
+
         queue = Volley.newRequestQueue(this);
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
@@ -73,7 +75,6 @@ public class CateListActivity extends Activity {
                 .build();
         titleTv = (TextView) findViewById(R.id.tv_title);
         cateListView = (ListView) findViewById(R.id.cateList_lv);
-        manager = DBManager.getInstance(CateListActivity.this);
 
         Intent intent = getIntent();
         if (intent.getStringExtra("title")!=null){
@@ -117,9 +118,9 @@ public class CateListActivity extends Activity {
                 Gson gson = new Gson();
                 Log.i("-----",s);
                 CateInfo cateInfo = gson.fromJson(s, CateInfo.class);
+                Log.i("hahhahahhaa",cateInfo.toString());
                 cateDetailInfos = cateInfo.getResult().getData();
                 initAdapter();
-                Toast.makeText(CateListActivity.this, "", Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -135,7 +136,7 @@ public class CateListActivity extends Activity {
                 maps.put("key",ConstantUtils.JUHE_CATE_KEY);
                 maps.put("cid",cid+"");
                 maps.put("pn","1");
-
+                maps.put("rn","25");
                 return maps;
             }
         };
@@ -190,10 +191,8 @@ public class CateListActivity extends Activity {
 //                        boolean result = manager.addCateCollecInfo(cateCollectionInfo);
 //                        if (result){
 //                            collectBtn.setBackgroundResource(R.mipmap.cate_list_like_click);
-//                            Toast.makeText(CateListActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
 //                        }else{
 //                            collectBtn.setBackgroundResource(R.mipmap.cate_list_like_normal);
-//                            Toast.makeText(CateListActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
 //                        }
                         //Toast.makeText(CateListActivity.this, cInfo.getId(), Toast.LENGTH_SHORT).show();
                     }
@@ -241,7 +240,6 @@ public class CateListActivity extends Activity {
             @Override
             public void done(String s, BmobException e) {
                 if (e==null){
-                    Toast.makeText(CateListActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
                     collectBtn.setBackgroundResource(R.mipmap.cate_list_like_click);
                     initAdapter();
                 }
@@ -275,7 +273,6 @@ public class CateListActivity extends Activity {
             @Override
             public void done(BmobException e) {
                 if (e==null){
-                    Toast.makeText(CateListActivity.this, "取消收藏", Toast.LENGTH_SHORT).show();
                     collectBtn.setBackgroundResource(R.mipmap.cate_list_like_normal);
                     initAdapter();
                 }

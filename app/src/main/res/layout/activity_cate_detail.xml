@@ -41,7 +41,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="800dp">
+        android:layout_height="800dp"
+        android:scrollIndicators="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,7 +73,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:id="@+id/detail_tag"
-                        android:padding="10dp"/>
+                        android:maxLines="2"
+                        android:padding="5dp"/>
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -90,8 +92,9 @@
                     android:id="@+id/detail_intro"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:maxLines="3"
-                    android:gravity="center"/>
+                    android:maxLines="4"
+                    android:gravity="center"
+                    android:layout_toLeftOf="@+id/detail_collect"/>
 
                 <Button
                     android:layout_width="32dp"
@@ -120,7 +123,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="鲫鱼"
-                    android:paddingLeft="10dp"/>
+                    android:paddingLeft="10dp"
+                    android:maxLines="2"/>
             </LinearLayout>
 
             <LinearLayout
@@ -128,7 +132,8 @@
                 android:layout_height="50dp"
                 android:orientation="vertical"
                 android:gravity="left|center_vertical"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:layout_marginTop="5dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -149,7 +154,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="left|center_vertical"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:layout_marginTop="5dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

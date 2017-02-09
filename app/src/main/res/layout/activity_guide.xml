@@ -2,15 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GuideActivity" >
+    tools:context=".activitys.GuideActivity"
+    android:background="@color/white">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/myPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </android.support.v4.view.ViewPager>
 
     <LinearLayout
+        android:id="@+id/guidelayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -42,12 +39,13 @@
              />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/myPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:text="立即进入" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

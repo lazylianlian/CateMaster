@@ -25,19 +25,17 @@ import com.catemaster.catemaster.R;
 import com.catemaster.catemaster.adapter.MyPagerAdapter;
 
 public class GuideActivity extends FragmentActivity implements OnClickListener {
-	ImageView i1, i2, i3, i4;
+	ImageView i1, i2, i3;
 
 	ViewPager vp;
 	List<Fragment> fragments;
 	Fragment1 Fragment1;
 	Fragment2 Fragment2;
 	Fragment3 Fragment3;
-	Fragment4 Fragment4;
 	MyPagerAdapter adapter;
 	List<ImageView> imageViews;
 	FragmentManager manager;
 	private SharedPreferences sp;
-	Button btn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,42 +55,27 @@ public class GuideActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void initViewPager() {
-		btn = (Button) findViewById(R.id.btn);
-		btn.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(GuideActivity.this,LoginAndRegistActivity.class);
-				startActivity(intent);
-				finish();
-			}
-		});
 		imageViews = new ArrayList<ImageView>();
 		i1 = (ImageView) findViewById(R.id.imageView1);
 		i2 = (ImageView) findViewById(R.id.imageView2);
 		i3 = (ImageView) findViewById(R.id.imageView3);
-		i4 = (ImageView) findViewById(R.id.imageView4);
 		i1.setOnClickListener(this);
 		i2.setOnClickListener(this);
 		i3.setOnClickListener(this);
-		i4.setOnClickListener(this);
 		imageViews.add(i1);
 		imageViews.add(i2);
 		imageViews.add(i3);
-		imageViews.add(i4);
 
 		vp = (ViewPager) findViewById(R.id.myPager);
 		fragments = new ArrayList<Fragment>();
 		Fragment1 = new Fragment1();
 		Fragment2 = new Fragment2();
 		Fragment3 = new Fragment3();
-		Fragment4 = new Fragment4();
 
 		fragments.add(Fragment1);
 		fragments.add(Fragment2);
 		fragments.add(Fragment3);
-		fragments.add(Fragment4);
 		adapter = new MyPagerAdapter(manager, fragments);
 		vp.setAdapter(adapter);
 		vp.setCurrentItem(0);
@@ -117,11 +100,7 @@ public class GuideActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void resetColor(int index) {
-		if (index == imageViews.size() - 1) {
-			btn.setVisibility(View.VISIBLE);
-		} else {
-			btn.setVisibility(View.GONE);
-		}
+
 		for (int i = 0; i < imageViews.size(); i++) {
 			if (index == i) {
 				imageViews.get(i).setBackgroundResource(R.drawable.a4);
@@ -147,10 +126,6 @@ public class GuideActivity extends FragmentActivity implements OnClickListener {
 		case R.id.imageView3:
 			vp.setCurrentItem(2);
 			resetColor(2);
-			break;
-		case R.id.imageView4:
-			vp.setCurrentItem(3);
-			resetColor(3);
 			break;
 
 		default:

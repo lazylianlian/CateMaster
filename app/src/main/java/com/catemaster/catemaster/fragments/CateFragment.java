@@ -19,7 +19,6 @@ import android.widget.GridView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -74,7 +73,6 @@ public class CateFragment extends Fragment{
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				String selected = tags[position];
-				Toast.makeText(getActivity(), selected, Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(getActivity(), CateListActivity.class);
 				intent.putExtra("title", selected);
 				intent.putExtra("cid",position+1);
@@ -98,13 +96,14 @@ public class CateFragment extends Fragment{
 				intent.putExtra("searchT",searchText);
 
 				intent.putExtra("searchCateInfo",cateInfo);
+				showPopWindow();
 				startActivity(intent);
+
 			}
 		}, new Response.ErrorListener() {
 			@Override
 			public void onErrorResponse(VolleyError volleyError) {
 //				String err = volleyError.getCause().toString();
-//				Toast.makeText(getActivity(), err, Toast.LENGTH_SHORT).show();
 
 			}
 		}) {
@@ -150,7 +149,10 @@ public class CateFragment extends Fragment{
 			doSearch.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					searchCateData(et_search.getText().toString().trim());
+					if (et_search.getText().toString().length()!=0){
+						searchCateData(et_search.getText().toString().trim());
+
+					}
 				}
 			});
 		} else {

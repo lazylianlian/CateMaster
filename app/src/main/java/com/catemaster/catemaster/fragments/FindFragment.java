@@ -53,7 +53,7 @@ public class FindFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Post post = postList.get(i);
                 Intent intent = new Intent(getActivity(),FindDetailActivity.class);
-                intent.putExtra("post",postList.get(i));
+                intent.putExtra("post",post);
                 startActivity(intent);
             }
         });
@@ -69,7 +69,9 @@ public class FindFragment extends Fragment {
     private void initData() {
         BmobQuery<Post> query = new BmobQuery<>("Post");
         query.order("-updatedAt");
-        query.include("author.username");
+        query.include("author");
+        query.include("image");
+
         /*
         缓存策略
         Bmob SDK提供了几种不同的缓存策略，以适应不同应用场景的需求：
@@ -90,7 +92,6 @@ public class FindFragment extends Fragment {
                     postList = list;
                     initAdapter();
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(getActivity(), "获取成功"+postList.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -107,7 +108,7 @@ public class FindFragment extends Fragment {
                 if (item.getImage()!=null){
                     helper.setImageByUrl(R.id.fd_img,item.getImage().getFileUrl());
                 }else{
-                    helper.setImageResource(R.id.fd_img,R.mipmap.grid_hongbei);
+                    helper.setImageResource(R.id.fd_img,R.mipmap.find_img);
                 }
             }
         };

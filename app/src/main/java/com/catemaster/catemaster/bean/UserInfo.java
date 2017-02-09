@@ -8,7 +8,7 @@ import cn.bmob.v3.datatype.BmobFile;
  */
 
 public class UserInfo extends BmobUser{
-    private String userWord;
+    private String userWord = "我的美食宣言";
     private BmobFile userHeadImg;
     public static UserInfo getCurrentUser(){
         UserInfo currentUser = BmobUser.getCurrentUser(UserInfo.class);

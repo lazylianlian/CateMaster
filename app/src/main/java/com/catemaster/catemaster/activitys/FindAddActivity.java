@@ -38,6 +38,7 @@ public class FindAddActivity extends AppCompatActivity {
     ImageView pImage;
     Button postBtn;
     Post post = new Post();
+    BmobFile imageFile = new BmobFile();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +80,6 @@ public class FindAddActivity extends AppCompatActivity {
         if (requestCode == 2 && resultCode == RESULT_OK) {
             pImageText.setVisibility(View.GONE);
             Uri uri = data.getData();
-            Log.i("图片路径：：：",uri.toString());
 
             ContentResolver cr = this.getContentResolver();
             try {
@@ -99,13 +99,16 @@ public class FindAddActivity extends AppCompatActivity {
     }
 
     private void doPostImageFile(String path) {
-        final BmobFile imageFile = new BmobFile(new File(path));
+        postBtn.setClickable(false);
+        imageFile = new BmobFile(new File(path));
         imageFile.uploadblock(new UploadFileListener() {
             @Override
             public void done(BmobException e) {
                 if (e==null){
                     String url = imageFile.getFileUrl();
-                    post.setImage(imageFile);
+                    postBtn.setClickable(true);
+
+                    //post.setImage(imageFile);
                 }
             }
 
@@ -120,11 +123,11 @@ public class FindAddActivity extends AppCompatActivity {
         post.setTitle(pTitle.getText().toString().trim());
         post.setContent(pContent.getText().toString().trim());
         post.setAuthor(UserInfo.getCurrentUser());
+        post.setImage(imageFile);
         post.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 Toast.makeText(FindAddActivity.this, "发表成功", Toast.LENGTH_SHORT).show();
-
             }
         });
     }

@@ -51,7 +51,7 @@
                 android:text="邮   箱：" />
             <EditText
                 android:id="@+id/login_username"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textEmailAddress" />
@@ -72,20 +72,21 @@
 
             <EditText
                 android:id="@+id/login_pass"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10" />
+                android:ems="10"
+                android:inputType="textPassword" />
 
-            <TextView
-                android:text="密码错误"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/Toast_pass1"
-                android:layout_weight="1"
-                android:textColor="@color/hotpink"
-                android:visibility="gone"/>
+
         </LinearLayout>
-
+        <TextView
+            android:text="用户名或密码错误"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Toast_pass1"
+            android:layout_weight="1"
+            android:textColor="@color/lightcoral"
+            android:visibility="gone"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,18 +95,20 @@
             <Button
                 android:id="@+id/login_login"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="立即登录"
                 android:layout_weight="1"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:background="@mipmap/btn_green"
+                android:layout_height="70dp" />
 
             <Button
                 android:id="@+id/login_regist"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
                 android:text="注     册"
                 android:layout_weight="1"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:background="@mipmap/btn_orange" />
         </LinearLayout>
 
 
@@ -165,10 +168,11 @@
 
             <EditText
                 android:id="@+id/regist_pass"
-                android:layout_width="175dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:layout_weight="0.10" />
+                android:layout_weight="0.10"
+                android:inputType="textPassword" />
 
             <TextView
                 android:text="字母数字组合"
@@ -193,10 +197,10 @@
 
             <EditText
                 android:id="@+id/regist_secondPass"
-                android:layout_width="177dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                />
+                android:inputType="textPassword" />
 
             <TextView
             android:text="输入密码不一致"
@@ -228,18 +232,20 @@
             <Button
                 android:id="@+id/regist_regist"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
                 android:text="注     册"
                 android:layout_weight="1"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:background="@mipmap/btn_green" />
 
             <Button
                 android:id="@+id/regist_login"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
                 android:text="立即登录"
                 android:layout_weight="1"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:background="@mipmap/btn_orange" />
 
 
         </LinearLayout>

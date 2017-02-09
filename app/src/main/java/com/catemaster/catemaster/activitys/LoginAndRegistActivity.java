@@ -126,10 +126,16 @@ public class LoginAndRegistActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.login_regist://切换为注册页面
+                regist_email.setText("");
+                regist_pass.setText("");
+                regist_secondPass.setText("");
+                regist_userName.setText("");
                 loginLayout.setVisibility(View.GONE);
                 registLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.regist_login://切换为登录页面
+                login_userName.setText("");
+                login_pass.setText("");
                 loginLayout.setVisibility(View.VISIBLE);
                 registLayout.setVisibility(View.GONE);
                 break;
@@ -163,9 +169,9 @@ public class LoginAndRegistActivity extends AppCompatActivity implements View.On
                     toast_pass1.setVisibility(View.GONE);
 
                     UserInfo currentUser = BmobUser.getCurrentUser(UserInfo.class);
-                    Toast.makeText(LoginAndRegistActivity.this, currentUser.getObjectId()+currentUser.getUsername(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginAndRegistActivity.this,MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }else{
                     toast_pass1.setVisibility(View.VISIBLE);
                 }
