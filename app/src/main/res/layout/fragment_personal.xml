@@ -88,12 +88,20 @@
         android:gravity="center"
         android:id="@+id/toast_collec"
 		android:layout_below="@+id/centerview"/>
-
+	<TextView
+		android:id="@+id/collectTitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="  我的收藏"
+		android:textSize="15sp"
+		android:padding="10dp"
+		android:layout_below="@+id/toast_collec"
+		android:drawableLeft="@mipmap/cate_list_like_click"/>
 	<ListView
         android:id="@+id/personListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-		android:layout_below="@+id/toast_collec"
+		android:layout_below="@+id/collectTitle"
 		android:scrollIndicators="none">
     </ListView>
 

@@ -217,7 +217,7 @@ public class PersonalFragment extends Fragment {
         initData();
     }
 
-    /**
+    /**s
      * 取消收藏
      * @param cateCollectionInfo 所选的美食
      */
