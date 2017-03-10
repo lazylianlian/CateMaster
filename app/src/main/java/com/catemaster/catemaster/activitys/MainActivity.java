@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.catemaster.catemaster.R;
@@ -15,7 +16,7 @@ import com.catemaster.catemaster.fragments.FindFragment;
 import com.catemaster.catemaster.fragments.PersonalFragment;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
-	private TextView tv_cate, tv_find, tv_person;
+	private LinearLayout tv_cate, tv_find, tv_person;
 	FragmentManager manager;
 	FragmentTransaction transaction;
 	CateFragment cateFragment;
@@ -34,9 +35,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private void initView() {
 		// TODO Auto-generated method stub
-		tv_cate = (TextView) findViewById(R.id.tv_cate);
-		tv_find = (TextView) findViewById(R.id.tv_find);
-		tv_person = (TextView) findViewById(R.id.tv_person);
+		tv_cate = (LinearLayout) findViewById(R.id.tv_cate);
+		tv_find = (LinearLayout) findViewById(R.id.tv_find);
+		tv_person = (LinearLayout) findViewById(R.id.tv_person);
 		tv_cate.setOnClickListener(this);
 		tv_find.setOnClickListener(this);
 		tv_person.setOnClickListener(this);

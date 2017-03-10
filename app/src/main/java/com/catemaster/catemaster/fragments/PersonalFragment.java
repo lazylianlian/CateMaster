@@ -28,6 +28,7 @@ import com.catemaster.catemaster.activitys.CateListActivity;
 import com.catemaster.catemaster.activitys.FindAddActivity;
 import com.catemaster.catemaster.activitys.PersonalSetActivity;
 import com.catemaster.catemaster.bean.CateCollectionInfo;
+import com.catemaster.catemaster.bean.CateInfo;
 import com.catemaster.catemaster.bean.UserInfo;
 import com.catemaster.catemaster.dao.DBManager;
 import com.catemaster.catemaster.utils.CommonAdapter;
@@ -316,6 +317,33 @@ public class PersonalFragment extends Fragment {
             }
         };
         listView.setAdapter(adapter);
+        setListViewHeightBasedOnChildren(listView);
+    }
+    /*
+     *   代码计算ListView的高度
+     */
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        // 获取ListView对应的Adapter
+        CommonAdapter<CateCollectionInfo> listAdapter = (CommonAdapter<CateCollectionInfo>) listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
+            // listAdapter.getCount()返回数据项的数目
+            View listItem = listAdapter.getView(i, null, listView);
+            // 计算子项View 的宽高
+            listItem.measure(0, 0);
+            // 统计所有子项的总高度
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + 400 + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        // listView.getDividerHeight()获取子项间分隔符占用的高度
+        // params.height最后得到整个ListView完整显示需要的高度
+        listView.setLayoutParams(params);
     }
 
     /*
